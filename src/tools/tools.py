@@ -6,6 +6,7 @@ import os
 from tavily import TavilyClient
 from bs4 import BeautifulSoup
 from readability import Document
+from pydantic import BaseModel, Field
 import trafilatura
 import re
 
@@ -13,7 +14,13 @@ load_dotenv()
 # 1. Search Tool
 tavily = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
 
-@tool
+
+# - Define the exact input schema for the tool
+class SearchInput(BaseModel):
+    query: str = Field(description="The search query string to look up on the web.")
+
+# - Attach the schema to my custom tool using args_schema
+@tool(args_schema=SearchInput)
 def web_search(query: str) -> str:
     """Search the web for recent and reliable information on a topic. Return Titles, URLs from trusted resources only. Make sure to extract trusted info only."""
     results = tavily.search(query=query, max_results=5)
@@ -26,7 +33,12 @@ def web_search(query: str) -> str:
 
     return "\n---\n".join(out)
 
-@tool
+
+class ScrapeInput(BaseModel):
+    url: str = Field(description="The specific web page URL to scrape content from.")
+
+
+@tool(args_schema=ScrapeInput)
 def scrape_url(url: str) -> str:
     """
     Scrape and extract clean readable content from a URL.
