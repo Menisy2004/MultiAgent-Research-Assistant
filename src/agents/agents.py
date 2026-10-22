@@ -3,7 +3,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmb
 from langchain_groq import ChatGroq
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
-from src.tools.tools import web_search, scrape_url
+from src.tools.tools import web_search, scrape_url, web_open
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
@@ -15,10 +15,8 @@ llm = ChatGroq(model="openai/gpt-oss-120b", temperature=0)
 def build_search_agent():
     return create_agent(
         model=llm,
-        tools=[web_search],
-        system_prompt="""You are an expert research assistant. Always cite your sources, make sure to get reliable sources.
-        IMPORTANT: You only have access to the web_search tool. Do not attempt to call any other tools like web_open or scrape.
-        """
+        tools=[web_search, web_open],
+        system_prompt="""You are an expert research assistant. Always cite your sources, make sure to get reliable sources."""
     )
 
 # 2nd Agent(Reader Agent)

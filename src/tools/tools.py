@@ -137,3 +137,12 @@ def scrape_url(url: str) -> str:
 
     except Exception as e:
         return f"Could not scrape URL: {str(e)}"
+
+
+class WebOpenInput(BaseModel):
+    id: str = Field(description="The URL of the webpage to open.")
+
+@tool(args_schema=WebOpenInput)
+def web_open(id: str) -> str:
+    """Open and extract content from a specific webpage URL."""
+    return scrape_url.invoke({"url": id})
