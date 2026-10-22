@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 # Model Initialization 
-llm_fast = ChatGroq(model="openai/gpt-oss-120b", temperature=0)
+llm_fast = ChatGroq(model="openai/gpt-oss-20b", temperature=0)
 llm_smart = ChatGroq(model="openai/gpt-oss-120b", temperature=0)
 
 # Use llm_fast in build_search_agent() and build_reader_agent()

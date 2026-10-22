@@ -495,7 +495,7 @@ if st.session_state.running and not st.session_state.done:
 
     # ── Step 2: Reader ──
     with st.spinner("📄 Reader Agent is scraping top resources…"):
-
+        time.sleep(12) # Let Groq's TPM bucket reset after Step 1
         reader_agent = build_reader_agent()
 
         rr = reader_agent.invoke({
@@ -512,7 +512,7 @@ if st.session_state.running and not st.session_state.done:
 
     # ── Step 3: Writer ──
     with st.spinner("✍️ Writer is drafting the report…"):
-
+        time.sleep(12)  # Let Groq's TPM bucket reset after Step 2
         research_combined = (
             f"SEARCH RESULTS:\n{results['search']}\n\n"
             f"DETAILED SCRAPED CONTENT:\n{results['reader']}"
@@ -527,7 +527,7 @@ if st.session_state.running and not st.session_state.done:
 
     # ── Step 4: Critic ──
     with st.spinner("🧐 Critic is reviewing the report…"):
-
+        time.sleep(12)  # Let Groq's TPM bucket reset after Step 3
         results["critic"] = critic_chain.invoke({
             "report": results["writer"]
         })

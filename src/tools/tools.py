@@ -28,7 +28,7 @@ def web_search(query: str) -> str:
     out = []
     for r in results['results']:
         out.append(
-            f"Title: {r['title']}\nURL: {r['url']}\nSnippet: {r['content'][:300]}\n"
+            f"Title: {r['title']}\nURL: {r['url']}\nSnippet: {r['content'][:250]}\n"
         )
 
     return "\n---\n".join(out)
@@ -78,7 +78,7 @@ def scrape_url(url: str) -> str:
 
         if extracted and len(extracted.strip()) > 200:
             cleaned = re.sub(r'\s+', ' ', extracted)
-            return cleaned[:5000]
+            return cleaned[:1500]
 
         # ──────────────────────────────────────────────────
         # Strategy 2 → readability
