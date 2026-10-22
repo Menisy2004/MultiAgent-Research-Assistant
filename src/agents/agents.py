@@ -19,7 +19,7 @@ llm_smart = ChatGroq(model="openai/gpt-oss-120b", temperature=0)
 def build_search_agent():
     return create_agent(
         model=llm_fast,
-        tools=[web_search, web_open],
+        tools=[web_search],
         system_prompt="""You are an expert research assistant. Always cite your sources, make sure to get reliable sources."""
     )
 
@@ -27,7 +27,7 @@ def build_search_agent():
 def build_reader_agent():
     return create_agent(
         model=llm_fast,
-        tools=[scrape_url],
+        tools=[scrape_url, web_open],
         system_prompt="""You are a reader agent that is responsible to scrape info from the sources outputed by the search agent.
         IMPORTANT: You do not have a search tool. Do not attempt to call search. You must only use the scrape_url tool by passing valid URLs."""
     )
