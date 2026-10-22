@@ -9,12 +9,16 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 # Model Initialization 
-llm = ChatGroq(model="openai/gpt-oss-120b", temperature=0)
+llm_fast = ChatGroq(model="openai/gpt-oss-20b", temperature=0)
+llm_smart = ChatGroq(model="openai/gpt-oss-120b", temperature=0)
+
+# Use llm_fast in build_search_agent() and build_reader_agent()
+# Use llm_smart in writer_chain and critic_chain
 
 # 1st Agent(Search agent)
 def build_search_agent():
     return create_agent(
-        model=llm,
+        model=llm_fast,
         tools=[web_search, web_open],
         system_prompt="""You are an expert research assistant. Always cite your sources, make sure to get reliable sources."""
     )
@@ -22,7 +26,7 @@ def build_search_agent():
 # 2nd Agent(Reader Agent)
 def build_reader_agent():
     return create_agent(
-        model=llm,
+        model=llm_fast,
         tools=[scrape_url],
         system_prompt="""You are a reader agent that is responsible to scrape info from the sources outputed by the search agent.
         IMPORTANT: You do not have a search tool. Do not attempt to call search. You must only use the scrape_url tool by passing valid URLs."""
@@ -49,7 +53,7 @@ Be detailed, factual and professiona
 """),
 ])
 
-writer_chain = writer_prompt | llm | StrOutputParser()
+writer_chain = writer_prompt | llm_smart | StrOutputParser()
 
 # Critic Chain
 critic_prompt = ChatPromptTemplate.from_messages([
@@ -73,4 +77,4 @@ critic_prompt = ChatPromptTemplate.from_messages([
     One line verdict:
     ..."""),
 ])
-critic_chain = critic_prompt | llm | StrOutputParser()
+critic_chain = critic_prompt | llm_smart | StrOutputParser()
