@@ -15,12 +15,16 @@ llm_smart = ChatGroq(model="openai/gpt-oss-120b", temperature=0)
 # Use llm_fast in build_search_agent() and build_reader_agent()
 # Use llm_smart in writer_chain and critic_chain
 
-# 1st Agent(Search agent)
+# 1st Agent (Search agent)
 def build_search_agent():
     return create_agent(
         model=llm_fast,
         tools=[web_search],
-        system_prompt="""You are an expert research assistant. Always cite your sources, make sure to get reliable sources."""
+        system_prompt=(
+            "You are an expert research assistant. "
+            "Call web_search ONCE with a clear 'query' string, then immediately summarize the findings and list the URLs. "
+            "Do not call web_search multiple times or attempt to paginate."
+        )
     )
 
 # 2nd Agent(Reader Agent)
